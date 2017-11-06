@@ -16,9 +16,20 @@ void ofApp::setup(){
     mycam.setDesiredFrameRate(30);
     mycam.initGrabber(camWidth, camHeight);
     
+    //set up tracker
     ofSetVerticalSync(true);
     ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
     tracker.setup();
+    
+    //set up random color
+    //light red
+    colors[0] = {183, 43, 13};
+    //lgith yellow
+    colors[1] = {247,197,46};
+    //light blue
+    colors[2] = {8,26,91};
+    //light Grey
+    colors[3] = {227,255,228};
 }
 
 //--------------------------------------------------------------
@@ -47,25 +58,46 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    //Background
-    ofSetColor(0, 0, 0);
-    //Vertical bar
     
-    //Horizontal bar
+    //random color
+    int ran = ofRandom(4);
     
+    ofPixels & pixels = mycam.getPixels();
+    int camWidth = pixels.getWidth();
+    int camHeight = pixels.getHeight();
+    int nChannels = pixels.getNumChannels();
 
-    //mycam.draw(0,0);
-    //tracker.draw();
     ofSetLineWidth(2);
     int Jaw =tracker.getGesture(ofxFaceTracker::JAW_OPENNESS);
     
+    //dynamic background
+    if (Jaw >22) {
     
-    //try to use the eye openness but the accuracy is not good enough
+        ofSetColor(colors[ran]);
+        //mycam.draw(0,0);
+        //mycam.draw(0,0);
+        for (int i = 4; i < camWidth; i+=8){
+            for (int j = 4; j < camHeight; j+=8){
+                unsigned char r = pixels[(j * 320 + i)*nChannels];
+                float val = 1 - ((float)r / 255.0f);
+                    ofDrawRectangle(i,
+                                j,
+                                ofRandom(20)*val,
+                                ofRandom(10)*val);
+            }//end of for j
+        }//end of for i
+    }
+    
+
+    /*try to use the eye openness but the accuracy is not good enough
+    
     int left_eyeOpen =tracker.getGesture(ofxFaceTracker::LEFT_EYE_OPENNESS);
     int right_eyeOpen =tracker.getGesture(ofxFaceTracker::RIGHT_EYE_OPENNESS);
     
-    //cout<<Jaw<<endl;
+    //Testing for the condition
+    cout<<Jaw<<endl;
     cout<<left_eyeOpen<<endl;
+    */
     
     //Assign values for eye, nose, mouse, and face
     ofPolyline lefteye = tracker.getImageFeature(ofxFaceTracker::LEFT_EYE);
@@ -77,10 +109,9 @@ void ofApp::draw(){
     ofPolyline mouse = tracker.getImageFeature(ofxFaceTracker::INNER_MOUTH);
     ofPolyline face = tracker.getImageFeature(ofxFaceTracker::FACE_OUTLINE);
     ofPolyline nose = tracker.getImageFeature(ofxFaceTracker::NOSE_BASE);
-
     
-    
-    
+    //=====================================
+    //static Face
     ofSetColor(247,197,46);//yellow
     ofDrawCircle(lefteye.getCentroid2D(),30);
     ofDrawRectangle(right_eyebrow.getCentroid2D(),40,-10);
@@ -102,9 +133,76 @@ void ofApp::draw(){
     
     ofSetColor(255, 255, 255);
     ofDrawCircle(nose.getCentroid2D(), 5);
-    
+    //=====================================
     
     for (int i = 0; i < bands; ++i) {
+        //Background
+        ofSetColor(colors[0]);//
+        
+        ofDrawRectangle(camWidth/3,
+                        camHeight,
+                        (fftSmooth[i]*10),
+                        -camHeight);
+        ofDrawRectangle(camWidth/4,
+                        camHeight,
+                        (fftSmooth[i]*10),
+                        -camHeight);
+        ofDrawRectangle(camWidth/5,
+                        camHeight,
+                        (fftSmooth[i]*10),
+                        -camHeight);
+        
+        ofSetColor(colors[2]);//
+        ofDrawRectangle(camWidth/6,
+                        camHeight,
+                        (fftSmooth[i]*10),
+                        -camHeight);
+        ofDrawRectangle(camWidth/2.5,
+                        camHeight,
+                        (fftSmooth[i]*10),
+                        -camHeight);
+        ofDrawRectangle(camWidth/9,
+                        camHeight,
+                        (fftSmooth[i]*10),
+                        -camHeight);
+        
+        ofSetColor(colors[1]);//
+        ofDrawRectangle(camWidth/1.5,
+                        camHeight,
+                        (fftSmooth[i]*10),
+                        -camHeight);
+        ofDrawRectangle(camWidth/1.2,
+                        camHeight,
+                        (fftSmooth[i]*10),
+                        -camHeight);
+        //=====================================
+        //Horizontal bar
+        ofSetColor(colors[0]);//
+        ofDrawRectangle(camWidth,
+                        camHeight/3,
+                        -camWidth,
+                        (fftSmooth[i]*10));
+        ofDrawRectangle(camWidth,
+                        camHeight/5,
+                        -camWidth,
+                        (fftSmooth[i]*10));
+        ofSetColor(colors[1]);//
+        ofDrawRectangle(camWidth,
+                        camHeight/6,
+                        -camWidth,
+                        (fftSmooth[i]*10));
+        ofDrawRectangle(camWidth,
+                        camHeight/1.3,
+                        -camWidth,
+                        (fftSmooth[i]*10));
+        ofDrawRectangle(camWidth,
+                        camHeight/8,
+                        -camWidth,
+                        (fftSmooth[i]*10));
+        //=====================================
+        
+        //=====================================
+        //Dynamic Face
         ofSetColor(247,197,46);//yellow
         ofDrawCircle(lefteye.getCentroid2D(),-(fftSmooth[i]*30));
         ofDrawRectangle(right_eyebrow.getCentroid2D(),-(fftSmooth[i]*50),-(fftSmooth[i]*20));
@@ -121,75 +219,33 @@ void ofApp::draw(){
         
         ofDrawCircle(mouse.getCentroid2D(), -(fftSmooth[i]*30));
         
-        
-        ofSetColor(217, 220, 214);
-        ofDrawRectangle(ofGetWindowWidth()/3,
-                        ofGetWindowHeight(),
-                        (fftSmooth[i]*10),
-                        -ofGetWindowHeight());
-        ofDrawRectangle(ofGetWindowWidth()/4,
-                        ofGetWindowHeight(),
-                        (fftSmooth[i]*10),
-                        -ofGetWindowHeight());
-        ofDrawRectangle(ofGetWindowWidth()/5,
-                        ofGetWindowHeight(),
-                        (fftSmooth[i]*10),
-                        -ofGetWindowHeight());
-        ofDrawRectangle(ofGetWindowWidth()/6,
-                        ofGetWindowHeight(),
-                        (fftSmooth[i]*10),
-                        -ofGetWindowHeight());
-        ofDrawRectangle(ofGetWindowWidth()/2.5,
-                        ofGetWindowHeight(),
-                        (fftSmooth[i]*10),
-                        -ofGetWindowHeight());
-        ofDrawRectangle(ofGetWindowWidth()/9,
-                        ofGetWindowHeight(),
-                        (fftSmooth[i]*10),
-                        -ofGetWindowHeight());
-        ofDrawRectangle(ofGetWindowWidth()/1.5,
-                        ofGetWindowHeight(),
-                        (fftSmooth[i]*10),
-                        -ofGetWindowHeight());
-        ofDrawRectangle(ofGetWindowWidth()/1.2,
-                        ofGetWindowHeight(),
-                        (fftSmooth[i]*10),
-                        -ofGetWindowHeight());
-        
-        //Horizontal bar
-        ofDrawRectangle(ofGetWindowWidth(),
-                        ofGetWindowHeight()/3,
-                        -ofGetWindowWidth(),
-                        (fftSmooth[i]*10));
-        ofDrawRectangle(ofGetWindowWidth(),
-                        ofGetWindowHeight()/5,
-                        -ofGetWindowWidth(),
-                        (fftSmooth[i]*10));
-        ofDrawRectangle(ofGetWindowWidth(),
-                        ofGetWindowHeight()/6,
-                        -ofGetWindowWidth(),
-                        (fftSmooth[i]*10));
-        ofDrawRectangle(ofGetWindowWidth(),
-                        ofGetWindowHeight()/1.3,
-                        -ofGetWindowWidth(),
-                        (fftSmooth[i]*10));
-        ofDrawRectangle(ofGetWindowWidth(),
-                        ofGetWindowHeight()/8,
-                        -ofGetWindowWidth(),
-                        (fftSmooth[i]*10));
     }
+    
     
     ofSetColor(255,255,255);
     if (Jaw<22 ) {
+        
         //Play music when mouse is open
         music.play();
     }
+    ofSetColor(0, 0, 0);
+    ofDrawBitmapString("Open your mouth" ,20,800);
+    ofDrawBitmapString("press 'n' for no fill effect" ,20,820);
+    ofDrawBitmapString("press 'f' for fill effect " ,20,840);
+    
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if(key == 'r') {
         tracker.reset();
+    }
+    if (key == 'n'){
+        ofNoFill();
+    }
+    if (key == 'f'){
+        ofFill();
     }
 
 }

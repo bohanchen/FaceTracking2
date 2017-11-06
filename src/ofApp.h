@@ -45,5 +45,8 @@ class ofApp : public ofBaseApp{
     
     float * fftSmooth;
     int bands;
+    
+    //random color
+    ofColor colors[3];
 		
 };
