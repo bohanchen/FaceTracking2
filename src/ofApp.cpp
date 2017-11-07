@@ -139,65 +139,53 @@ void ofApp::draw(){
         //Background
         ofSetColor(colors[0]);//
         
-        ofDrawRectangle(camWidth/3,
-                        camHeight,
-                        (fftSmooth[i]*10),
-                        -camHeight);
-        ofDrawRectangle(camWidth/4,
-                        camHeight,
-                        (fftSmooth[i]*10),
-                        -camHeight);
-        ofDrawRectangle(camWidth/5,
-                        camHeight,
-                        (fftSmooth[i]*10),
-                        -camHeight);
+        ofDrawCircle(ofRandom(camWidth/3),
+                        ofRandom(camHeight),
+                        (fftSmooth[i]*10));
+        ofDrawCircle(camWidth/4,
+                        ofRandom(camHeight),
+                        (fftSmooth[i]*10));
+        ofDrawCircle(ofRandom(camWidth/5),
+                        ofRandom(camHeight),
+                        (fftSmooth[i]*10));
         
         ofSetColor(colors[2]);//
-        ofDrawRectangle(camWidth/6,
-                        camHeight,
-                        (fftSmooth[i]*10),
-                        -camHeight);
-        ofDrawRectangle(camWidth/2.5,
-                        camHeight,
-                        (fftSmooth[i]*10),
-                        -camHeight);
-        ofDrawRectangle(camWidth/9,
-                        camHeight,
-                        (fftSmooth[i]*10),
-                        -camHeight);
+        ofDrawCircle(ofRandom(camWidth/6),
+                        ofRandom(camHeight),
+                        (fftSmooth[i]*10));
+        
+        ofDrawCircle(ofRandom(camWidth/2.5),
+                        ofRandom(camHeight),
+                        (fftSmooth[i]*10));
+        ofDrawCircle(ofRandom(camWidth/9),
+                        ofRandom(camHeight),
+                        (fftSmooth[i]*10));
         
         ofSetColor(colors[1]);//
-        ofDrawRectangle(camWidth/1.5,
-                        camHeight,
-                        (fftSmooth[i]*10),
-                        -camHeight);
-        ofDrawRectangle(camWidth/1.2,
-                        camHeight,
-                        (fftSmooth[i]*10),
-                        -camHeight);
+        ofDrawCircle(ofRandom(camWidth/1.5),
+                        ofRandom(camHeight),
+                        (fftSmooth[i]*10));
+        ofDrawCircle(ofRandom(camWidth/1.2),
+                        ofRandom(camHeight),
+                        (fftSmooth[i]*10));
         //=====================================
         //Horizontal bar
         ofSetColor(colors[0]);//
-        ofDrawRectangle(camWidth,
-                        camHeight/3,
-                        -camWidth,
+        ofDrawCircle(ofRandom(camWidth),
+                        ofRandom(camHeight/3),
                         (fftSmooth[i]*10));
-        ofDrawRectangle(camWidth,
-                        camHeight/5,
-                        -camWidth,
+        ofDrawCircle(ofRandom(camWidth),
+                        ofRandom(camHeight/5),
                         (fftSmooth[i]*10));
         ofSetColor(colors[1]);//
-        ofDrawRectangle(camWidth,
-                        camHeight/6,
-                        -camWidth,
+        ofDrawCircle(ofRandom(camWidth),
+                        ofRandom(camHeight/6),
                         (fftSmooth[i]*10));
-        ofDrawRectangle(camWidth,
-                        camHeight/1.3,
-                        -camWidth,
+        ofDrawCircle(ofRandom(camWidth),
+                        ofRandom(camHeight/1.3),
                         (fftSmooth[i]*10));
-        ofDrawRectangle(camWidth,
-                        camHeight/8,
-                        -camWidth,
+        ofDrawCircle(ofRandom(camWidth),
+                        ofRandom(camHeight/8),
                         (fftSmooth[i]*10));
         //=====================================
         
